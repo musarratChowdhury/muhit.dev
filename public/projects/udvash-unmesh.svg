@@ -1,0 +1,67 @@
+<svg width="1200" height="800" viewBox="0 0 1200 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="800" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#161524"/>
+      <stop offset="1" stop-color="#0d0c16"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0" cy="0" r="1" gradientTransform="translate(980 120) rotate(135) scale(560 460)" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#7dd3fc" stop-opacity="0.22"/>
+      <stop offset="1" stop-color="#7dd3fc" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid" width="64" height="64" patternUnits="userSpaceOnUse">
+      <path d="M64 0H0V64" stroke="white" stroke-opacity="0.035"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="800" fill="url(#bg)"/>
+  <rect width="1200" height="800" fill="url(#glow)"/>
+  <rect width="1200" height="800" fill="url(#grid)"/>
+  <text x="1140" y="768" text-anchor="end" font-family="ui-monospace, monospace" font-size="230" font-weight="700" fill="white" fill-opacity="0.028">02</text>
+  <g transform="translate(60 190)">
+    
+    
+    <rect width="1080" height="420" rx="18" fill="#0b0a13" stroke="white" stroke-opacity="0.09"/>
+    <rect width="1080" height="46" rx="18" fill="white" fill-opacity="0.035"/>
+    <circle cx="28" cy="23" r="5" fill="#7dd3fc" fill-opacity="0.9"/>
+    <circle cx="48" cy="23" r="5" fill="white" fill-opacity="0.16"/>
+    <circle cx="68" cy="23" r="5" fill="white" fill-opacity="0.16"/>
+    <rect x="100" y="15" width="240" height="16" rx="8" fill="white" fill-opacity="0.06"/>
+    <rect x="896" y="15" width="160" height="16" rx="8" fill="white" fill-opacity="0.04"/>
+  
+    <rect x="0" y="46" width="1080" height="374" fill="white" fill-opacity="0.012"/>
+    <g transform="translate(392 78)">
+      <rect width="296" height="300" rx="30" fill="#0f0e1a" stroke="#7dd3fc" stroke-opacity="0.35" stroke-width="2"/>
+      <rect x="12" y="12" width="272" height="276" rx="22" fill="white" fill-opacity="0.025"/>
+      <rect x="118" y="22" width="60" height="6" rx="3" fill="white" fill-opacity="0.2"/>
+      <rect x="28" y="46" width="120" height="12" rx="6" fill="white" fill-opacity="0.18"/>
+      <rect x="28" y="72" width="160" height="8" rx="4" fill="white" fill-opacity="0.08"/>
+      
+        <rect x="28" y="100" width="240" height="46" rx="10" fill="white" fill-opacity="0.04" stroke="white" stroke-opacity="0.05"/>
+        <rect x="38" y="110" width="54" height="26" rx="5" fill="#7dd3fc" fill-opacity="0.24"/>
+        <rect x="104" y="114" width="92" height="8" rx="4" fill="white" fill-opacity="0.16"/>
+        <rect x="104" y="128" width="60" height="6" rx="3" fill="white" fill-opacity="0.07"/>
+        <circle cx="250" cy="123" r="7" fill="#7dd3fc" fill-opacity="0.8"/>
+      
+        <rect x="28" y="158" width="240" height="46" rx="10" fill="white" fill-opacity="0.04" stroke="white" stroke-opacity="0.05"/>
+        <rect x="38" y="168" width="54" height="26" rx="5" fill="#7dd3fc" fill-opacity="0.19"/>
+        <rect x="104" y="172" width="92" height="8" rx="4" fill="white" fill-opacity="0.16"/>
+        <rect x="104" y="186" width="60" height="6" rx="3" fill="white" fill-opacity="0.07"/>
+        <circle cx="250" cy="181" r="7" fill="#7dd3fc" fill-opacity="0.6000000000000001"/>
+      
+        <rect x="28" y="216" width="240" height="46" rx="10" fill="white" fill-opacity="0.04" stroke="white" stroke-opacity="0.05"/>
+        <rect x="38" y="226" width="54" height="26" rx="5" fill="#7dd3fc" fill-opacity="0.13999999999999999"/>
+        <rect x="104" y="230" width="92" height="8" rx="4" fill="white" fill-opacity="0.16"/>
+        <rect x="104" y="244" width="60" height="6" rx="3" fill="white" fill-opacity="0.07"/>
+        <circle cx="250" cy="239" r="7" fill="#7dd3fc" fill-opacity="0.4"/>
+      
+      <rect x="28" y="274" width="240" height="4" rx="2" fill="white" fill-opacity="0.08"/>
+      <rect x="28" y="274" width="164" height="4" rx="2" fill="#7dd3fc" fill-opacity="0.7"/>
+    </g>
+    <rect x="746" y="120" width="250" height="60" rx="12" fill="#7dd3fc" fill-opacity="0.07" stroke="#7dd3fc" stroke-opacity="0.16"/>
+    <text x="770" y="158" font-family="monospace" font-size="22" fill="#7dd3fc">1M+ daily</text>
+    <rect x="746" y="202" width="250" height="60" rx="12" fill="white" fill-opacity="0.03" stroke="white" stroke-opacity="0.06"/>
+    <text x="770" y="240" font-family="monospace" font-size="22" fill="#f3f3f7">Offline</text>
+    <rect x="746" y="284" width="250" height="60" rx="12" fill="white" fill-opacity="0.03" stroke="white" stroke-opacity="0.06"/>
+    <text x="770" y="322" font-family="monospace" font-size="22" fill="#f3f3f7">Encrypted</text>
+  
+  </g>
+</svg>
