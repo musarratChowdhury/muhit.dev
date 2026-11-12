@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { cacheLife } from "next/cache";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, Lock } from "lucide-react";
 import type { SiteContent } from "@/types/content";
 import { Container } from "@/components/ui/container";
 import { Reveal } from "@/components/ui/reveal";
@@ -115,9 +115,19 @@ export async function Footer({ site }: { site: SiteContent["site"] }) {
           <p>
             © {year} {site.name}. All rights reserved.
           </p>
-          <p className="font-mono text-[11px]">
-            Built with Next.js, Tailwind CSS &amp; Motion.
-          </p>
+          <div className="flex items-center gap-3">
+            <p className="font-mono text-[11px]">
+              Built with Next.js, Tailwind CSS &amp; Motion.
+            </p>
+            <span aria-hidden="true" className="h-3 w-px bg-border" />
+            <Link
+              href="/admin/login"
+              className="inline-flex items-center gap-1.5 font-mono text-[11px] text-muted transition-colors hover:text-accent"
+            >
+              <Lock className="size-3" strokeWidth={2} />
+              Admin
+            </Link>
+          </div>
         </div>
       </Container>
     </footer>
