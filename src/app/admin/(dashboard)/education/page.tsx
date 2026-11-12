@@ -2,8 +2,6 @@ import type { Metadata } from "next";
 import { getSiteContent } from "@/lib/content/store";
 import { EducationEditor } from "@/components/admin/editors/education-editor";
 
-export const instant = false;
-
 export const metadata: Metadata = { title: "Education" };
 
 export default async function AdminEducationPage() {

@@ -1,23 +1,29 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
-import { getAdminUser } from "@/lib/auth/session";
 import { LoginForm } from "@/components/admin/login-form";
-
-export const instant = false;
+import { SignedInRedirect } from "@/components/admin/signed-in-redirect";
 
 export const metadata: Metadata = {
   title: "Admin sign-in",
   robots: { index: false, follow: false },
 };
 
-export default async function AdminLoginPage() {
-  const admin = await getAdminUser();
-  if (admin) redirect("/admin");
-
+/**
+ * This page is deliberately static.
+ *
+ * It used to read the session cookie to bounce an already-signed-in admin to
+ * `/admin`. With Cache Components that read is request-time work, so the route
+ * prerendered to an *empty* shell (`response: "empty"` in the prerender
+ * manifest) and the hosting platform served that blank shell as the page.
+ * The signed-in case is now handled on the client by <SignedInRedirect />,
+ * which keeps this route fully prerenderable.
+ */
+export default function AdminLoginPage() {
   return (
     <main className="admin-shell flex min-h-svh items-center justify-center px-4 py-16">
+      <SignedInRedirect />
+
       <div className="w-full max-w-sm">
         <Link
           href="/"

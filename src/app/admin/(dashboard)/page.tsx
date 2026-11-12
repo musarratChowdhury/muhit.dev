@@ -13,8 +13,6 @@ import {
 import { getSiteContent } from "@/lib/content/store";
 import { Card } from "@/components/admin/ui/card";
 
-export const instant = false;
-
 export const metadata: Metadata = { title: "Overview" };
 
 export default async function AdminOverviewPage() {

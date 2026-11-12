@@ -4,6 +4,7 @@ import { getAdminAuth } from "@/lib/firebase/admin";
 import {
   SESSION_COOKIE,
   SESSION_MAX_AGE_SECONDS,
+  getAdminUser,
   isAdminEmail,
 } from "@/lib/auth/session";
 
@@ -65,6 +66,18 @@ export async function POST(request: Request) {
       { status: 401 },
     );
   }
+}
+
+/**
+ * Reports whether the current request carries a valid admin session cookie.
+ *
+ * The cookie is httpOnly, so the browser can't read it. The login page is a
+ * fully static route (no server-side session read), and uses this to send an
+ * already-signed-in admin straight to the dashboard.
+ */
+export async function GET() {
+  const admin = await getAdminUser();
+  return NextResponse.json({ ok: Boolean(admin), email: admin?.email ?? null });
 }
 
 /** Sign out: drop the cookie. */
