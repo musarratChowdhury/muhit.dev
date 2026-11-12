@@ -15,9 +15,17 @@ export function useEditor<T>(initial: T) {
 
   const dirty = JSON.stringify(value) !== baseline;
 
-  const markSaved = React.useCallback(() => {
-    setBaseline(JSON.stringify(value));
-  }, [value]);
+  /**
+   * Adopts a draft as the new baseline. Pass `next` when the caller is also
+   * replacing the draft in the same tick (a reset writes server state, so the
+   * value it should compare against is not the one captured in this render).
+   */
+  const markSaved = React.useCallback(
+    (next?: T) => {
+      setBaseline(JSON.stringify(next ?? value));
+    },
+    [value],
+  );
 
   return { value, setValue, dirty, markSaved };
 }

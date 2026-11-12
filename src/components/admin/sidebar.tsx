@@ -11,6 +11,7 @@ import {
   LayoutDashboard,
   LogOut,
   MessageSquareQuote,
+  ScrollText,
   Settings2,
   Sparkles,
   ThumbsUp,
@@ -27,6 +28,7 @@ const links = [
   { href: "/admin/recommendations", label: "Recommendations", icon: ThumbsUp },
   { href: "/admin/education", label: "Education", icon: GraduationCap },
   { href: "/admin/skills", label: "Skills", icon: Sparkles },
+  { href: "/admin/activity", label: "Activity", icon: ScrollText },
 ];
 
 export function AdminSidebar({ email }: { email: string }) {

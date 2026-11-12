@@ -2,7 +2,9 @@
 
 import * as React from "react";
 import Image from "next/image";
-import { saveMain } from "@/app/admin/actions";
+import { RotateCcw } from "lucide-react";
+import { toast } from "sonner";
+import { resetTheme, saveMain } from "@/app/admin/actions";
 import type { SiteContent, SocialIcon, SocialLink, ThemeSettings } from "@/types/content";
 import { BUNDLED_PORTRAIT, isRemoteImage } from "@/lib/site-assets";
 import { EditorHeader } from "@/components/admin/save-button";
@@ -19,6 +21,24 @@ import {
 import { Button } from "@/components/admin/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/admin/ui/tabs";
 import { Card } from "@/components/admin/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/admin/ui/dialog";
+
+const THEME_KEYS = [
+  "accent",
+  "background",
+  "surface",
+  "surface2",
+  "foreground",
+  "muted",
+  "mutedStrong",
+] as const;
 
 const SOCIAL_ICONS: readonly SocialIcon[] = [
   "github",
@@ -101,12 +121,111 @@ function PortraitField({
   );
 }
 
+/**
+ * Puts the seven colours back to the shipped defaults.
+ *
+ * This writes to Firestore immediately rather than waiting for Save, because
+ * "reset" is a complete action on its own — the dialog says so, and the audit
+ * log records the previous values.
+ */
+function ResetThemeButton({
+  theme,
+  defaults,
+  onReset,
+}: {
+  theme: ThemeSettings;
+  defaults: ThemeSettings;
+  onReset: () => void;
+}) {
+  const [open, setOpen] = React.useState(false);
+  const [pending, setPending] = React.useState(false);
+
+  const alreadyDefault = THEME_KEYS.every((key) => theme[key] === defaults[key]);
+
+  async function handleConfirm() {
+    setPending(true);
+    try {
+      const state = await resetTheme();
+      if (state.ok) {
+        onReset();
+        toast.success(state.message);
+        setOpen(false);
+      } else {
+        toast.error(state.message);
+      }
+    } catch {
+      toast.error("Something went wrong. The theme was not reset.");
+    } finally {
+      setPending(false);
+    }
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <Button
+        type="button"
+        variant="outline"
+        size="sm"
+        className="gap-2"
+        onClick={() => setOpen(true)}
+        disabled={alreadyDefault}
+        title={alreadyDefault ? "Already using the default colours" : undefined}
+      >
+        <RotateCcw className="size-3.5" />
+        Reset to default
+      </Button>
+
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Reset theme to the shipped defaults?</DialogTitle>
+          <DialogDescription>
+            All seven colours go back to the values the site shipped with, and the
+            change is saved straight away — no Save needed. The current values are
+            written to the audit log first, so they can be recovered from there.
+          </DialogDescription>
+        </DialogHeader>
+
+        <dl className="grid grid-cols-2 gap-x-4 gap-y-2 font-mono text-[11px]">
+          {THEME_KEYS.map((key) => (
+            <div key={key} className="flex items-center gap-2">
+              <span
+                aria-hidden="true"
+                className="size-3 shrink-0 rounded-sm border"
+                style={{ backgroundColor: defaults[key] }}
+              />
+              <dt className="text-muted-foreground">{key}</dt>
+              <dd className="ml-auto text-foreground">{defaults[key]}</dd>
+            </div>
+          ))}
+        </dl>
+
+        <DialogFooter>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => setOpen(false)}
+            disabled={pending}
+          >
+            Cancel
+          </Button>
+          <Button type="button" onClick={handleConfirm} disabled={pending} className="gap-2">
+            <RotateCcw className="size-3.5" />
+            {pending ? "Resetting…" : "Reset colours"}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
 export function SiteEditor({
   initialSite,
   initialTheme,
+  defaults,
 }: {
   initialSite: SiteContent["site"];
   initialTheme: ThemeSettings;
+  defaults: ThemeSettings;
 }) {
   const editor = useEditor<Payload>({ site: initialSite, theme: initialTheme });
   const { site, theme } = editor.value;
@@ -128,6 +247,16 @@ export function SiteEditor({
     if (state.ok) editor.markSaved();
     return state;
   }
+
+  /**
+   * The server has already written the defaults, so adopt them locally too —
+   * otherwise the form would still show the old colours and look dirty.
+   */
+  const resetToDefaults = React.useCallback(() => {
+    const next: Payload = { ...editor.value, theme: defaults };
+    editor.setValue(next);
+    editor.markSaved(next);
+  }, [editor, defaults]);
 
   return (
     <div className="space-y-6">
@@ -437,13 +566,20 @@ export function SiteEditor({
 
         <TabsContent value="theme" className="space-y-6 pt-6">
           <Card className="gap-5 p-5">
-            <div>
-              <h2 className="text-sm font-medium">Colours</h2>
-              <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-                These are injected as CSS variables on every page. The accent tint
-                and the readable text colour on top of it are derived automatically
-                from the accent.
-              </p>
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+              <div>
+                <h2 className="text-sm font-medium">Colours</h2>
+                <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                  These are injected as CSS variables on every page. The accent tint
+                  and the readable text colour on top of it are derived automatically
+                  from the accent.
+                </p>
+              </div>
+              <ResetThemeButton
+                theme={theme}
+                defaults={defaults}
+                onReset={resetToDefaults}
+              />
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2">
