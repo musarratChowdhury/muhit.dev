@@ -86,10 +86,9 @@ export function LoginForm() {
   if (!configured) {
     return (
       <p className="rounded-lg border border-destructive/40 bg-destructive/10 p-4 text-sm text-foreground">
-        Firebase client config is missing. Add the{" "}
-        <code className="font-mono text-xs">NEXT_PUBLIC_FIREBASE_*</code> values
-        to <code className="font-mono text-xs">.env.local</code> and restart the
-        dev server.
+        Admin sign-in isn&apos;t configured on this deployment yet. The{" "}
+        <code className="font-mono text-xs">NEXT_PUBLIC_FIREBASE_*</code>{" "}
+        environment variables are missing.
       </p>
     );
   }
