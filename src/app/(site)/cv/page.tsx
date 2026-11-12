@@ -2,12 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft, Mail, MapPin } from "lucide-react";
 import { GithubIcon, LinkedinIcon } from "@/components/icons/brand-icons";
-import { site } from "@/content/site";
 import { pageMetadata } from "@/lib/metadata";
-import { experience } from "@/content/experience";
-import { education, certifications } from "@/content/education";
-import { skillGroups } from "@/content/skills";
-import { featuredProjects } from "@/content/projects";
+import { getSiteContent } from "@/lib/content/store";
 import { Container } from "@/components/ui/container";
 import { CVPrintButton } from "@/components/cv/print-button";
 
@@ -18,7 +14,13 @@ export const metadata: Metadata = pageMetadata({
   path: "/cv",
 });
 
-export default function CVPage() {
+export default async function CVPage() {
+  const content = await getSiteContent();
+  const { site } = content;
+
+  const github = site.socials.find((social) => social.icon === "github");
+  const linkedin = site.socials.find((social) => social.icon === "linkedin");
+
   return (
     <div className="print:bg-white">
       <Container className="max-w-4xl py-12 sm:py-16 print:max-w-none print:py-0">
@@ -56,24 +58,28 @@ export default function CVPage() {
                 <MapPin className="size-3.5" strokeWidth={1.8} />
                 {site.location}
               </span>
-              <a
-                href="https://github.com/musarratChowdhury"
-                target="_blank"
-                rel="noreferrer noopener"
-                className="inline-flex items-center gap-1.5 transition-colors hover:text-accent print:text-neutral-700"
-              >
-                <GithubIcon className="size-3.5" />
-                github.com/musarratChowdhury
-              </a>
-              <a
-                href="https://www.linkedin.com/in/musarrat-chowdhury/"
-                target="_blank"
-                rel="noreferrer noopener"
-                className="inline-flex items-center gap-1.5 transition-colors hover:text-accent print:text-neutral-700"
-              >
-                <LinkedinIcon className="size-3.5" />
-                linkedin.com/in/musarrat-chowdhury
-              </a>
+              {github ? (
+                <a
+                  href={github.href}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="inline-flex items-center gap-1.5 transition-colors hover:text-accent print:text-neutral-700"
+                >
+                  <GithubIcon className="size-3.5" />
+                  {github.handle?.replace(/^@/, "") ?? github.label}
+                </a>
+              ) : null}
+              {linkedin ? (
+                <a
+                  href={linkedin.href}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="inline-flex items-center gap-1.5 transition-colors hover:text-accent print:text-neutral-700"
+                >
+                  <LinkedinIcon className="size-3.5" />
+                  {linkedin.handle ?? linkedin.label}
+                </a>
+              ) : null}
             </div>
           </header>
 
@@ -91,7 +97,7 @@ export default function CVPage() {
               Experience
             </h2>
             <div className="mt-4 space-y-6">
-              {experience.map((item) => (
+              {content.experience.map((item) => (
                 <div key={`${item.company}-${item.period}`}>
                   <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
                     <h3 className="text-sm font-semibold text-foreground print:text-black">
@@ -125,7 +131,7 @@ export default function CVPage() {
               Selected projects
             </h2>
             <div className="mt-4 space-y-4">
-              {featuredProjects.slice(0, 3).map((project) => (
+              {content.projects.filter((project) => project.featured).slice(0, 3).map((project) => (
                 <div key={project.slug}>
                   <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
                     <h3 className="text-sm font-semibold text-foreground print:text-black">
@@ -151,7 +157,7 @@ export default function CVPage() {
               Skills
             </h2>
             <div className="mt-4 grid gap-4 sm:grid-cols-2 print:grid-cols-2">
-              {skillGroups.map((group) => (
+              {content.skillGroups.map((group) => (
                 <div key={group.title}>
                   <h3 className="text-xs font-semibold text-foreground print:text-black">
                     {group.title}
@@ -169,7 +175,7 @@ export default function CVPage() {
               Education
             </h2>
             <div className="mt-4 space-y-4">
-              {education.map((item) => (
+              {content.education.map((item) => (
                 <div key={item.degree}>
                   <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
                     <h3 className="text-sm font-semibold text-foreground print:text-black">
@@ -192,7 +198,7 @@ export default function CVPage() {
               Certifications
             </h2>
             <div className="mt-4 grid gap-x-6 gap-y-2 sm:grid-cols-2 print:grid-cols-2">
-              {certifications.map((certification) => (
+              {content.certifications.map((certification) => (
                 <div
                   key={`${certification.name}-${certification.issuer}`}
                   className="flex items-baseline justify-between gap-3 border-b border-border py-2 print:border-neutral-200"

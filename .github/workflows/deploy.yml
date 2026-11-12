@@ -1,0 +1,60 @@
+name: Deploy to Vercel
+
+# Build on GitHub, then ship the prebuilt output to Vercel production.
+# Push to main → live. Use "Run workflow" to redeploy without a commit.
+#
+# Fallback if the prebuilt flow ever fights you: delete the pull/build steps and
+# let Vercel build instead with `npx -y vercel@latest deploy --prod --yes`.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# One production deploy at a time; a newer push cancels an in-flight one.
+concurrency:
+  group: deploy-production
+  cancel-in-progress: true
+
+env:
+  # Both IDs identify the `muhit-dev` project (`.vercel/project.json`).
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+  # The CLI reads VERCEL_TOKEN from the environment, so the token never lands
+  # on a command line and is masked in the logs.
+  VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+
+jobs:
+  deploy:
+    name: Build & deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          # Matches local development (Node 24 LTS); Next 16 needs ≥ 20.9.
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Pulls the project's production environment variables, so this build
+      # uses the same Firebase config as the live site.
+      - name: Pull Vercel environment
+        run: npx -y vercel@latest pull --yes --environment=production
+
+      - name: Build
+        run: npx -y vercel@latest build --prod --yes
+
+      - name: Deploy
+        id: deploy
+        run: |
+          url=$(npx -y vercel@latest deploy --prebuilt --prod --yes)
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+          echo "Deployed $url to production." >> "$GITHUB_STEP_SUMMARY"

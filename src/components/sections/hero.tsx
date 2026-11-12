@@ -1,14 +1,17 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowDownRight, FileText, MapPin } from "lucide-react";
-import { site } from "@/content/site";
+import type { SiteContent } from "@/types/content";
+import { BUNDLED_PORTRAIT, isRemoteImage } from "@/lib/site-assets";
 import { Container } from "@/components/ui/container";
 import { Reveal } from "@/components/ui/reveal";
 import { Badge } from "@/components/ui/badge";
 import { SocialLinks } from "@/components/ui/social-links";
 import { buttonVariants } from "@/components/ui/button";
 
-export function Hero() {
+export function Hero({ site }: { site: SiteContent["site"] }) {
+  const portrait = site.portrait?.trim() || BUNDLED_PORTRAIT;
+
   return (
     <section className="relative overflow-hidden pb-16 pt-10 sm:pb-24 sm:pt-16 lg:pt-20">
       <Container>
@@ -70,10 +73,11 @@ export function Hero() {
               <div className="relative overflow-hidden rounded-[2rem] border border-border bg-surface card-glow">
                 <div className="relative aspect-[4/5] overflow-hidden">
                   <Image
-                    src="/images/portrait.jpg"
+                    src={portrait}
                     alt={`Portrait of ${site.name}`}
                     fill
                     preload
+                    unoptimized={isRemoteImage(portrait)}
                     sizes="(max-width: 1024px) 80vw, 380px"
                     className="object-cover object-top grayscale contrast-[1.05]"
                   />

@@ -1,15 +1,30 @@
 import Link from "next/link";
 import { ArrowUpRight, Mail, MapPin, Sparkles } from "lucide-react";
-import { site } from "@/content/site";
-import { education, certifications } from "@/content/education";
-import { skillGroups, techMarquee } from "@/content/skills";
+import type {
+  Certification,
+  Education,
+  SiteContent,
+  SkillGroup,
+} from "@/types/content";
 import { Section, SectionHeading } from "@/components/ui/section";
 import { Reveal } from "@/components/ui/reveal";
 import { TechPill } from "@/components/ui/badge";
 import { Marquee } from "@/components/ui/marquee";
 import { SpotlightCard } from "@/components/ui/spotlight-card";
 
-export function About() {
+export function About({
+  site,
+  education,
+  certifications,
+  skillGroups,
+  techMarquee,
+}: {
+  site: SiteContent["site"];
+  education: Education[];
+  certifications: Certification[];
+  skillGroups: SkillGroup[];
+  techMarquee: string[];
+}) {
   return (
     <Section id="about">
       <SectionHeading

@@ -2,13 +2,12 @@
 
 import { useState, type FormEvent } from "react";
 import { ArrowUpRight, Mail } from "lucide-react";
-import { site } from "@/content/site";
 import { buttonVariants } from "@/components/ui/button";
 
 const inputClassName =
   "mt-2 w-full rounded-xl border border-border bg-background/60 px-4 py-3 text-sm text-foreground placeholder:text-muted/70 transition-colors focus:border-accent/50 focus:outline-none focus:ring-2 focus:ring-accent/20";
 
-export function ContactForm() {
+export function ContactForm({ to }: { to: string }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
@@ -24,7 +23,7 @@ export function ContactForm() {
       `Name: ${name}\nEmail: ${email}\n\n${message}`,
     );
 
-    window.location.href = `mailto:${site.email}?subject=${subject}&body=${body}`;
+    window.location.href = `mailto:${to}?subject=${subject}&body=${body}`;
     setSent(true);
   }
 
@@ -96,8 +95,8 @@ export function ContactForm() {
           className="rounded-xl border border-accent/25 bg-accent-soft px-4 py-3 text-sm text-accent"
         >
           Your email draft should be open. If it isn&apos;t, write to{" "}
-          <a href={`mailto:${site.email}`} className="underline underline-offset-2">
-            {site.email}
+          <a href={`mailto:${to}`} className="underline underline-offset-2">
+            {to}
           </a>
           .
         </p>

@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft, Clock, Mail, MapPin } from "lucide-react";
-import { site } from "@/content/site";
 import { pageMetadata } from "@/lib/metadata";
+import { getSiteContent } from "@/lib/content/store";
 import { Container } from "@/components/ui/container";
 import { Reveal } from "@/components/ui/reveal";
 import { Badge } from "@/components/ui/badge";
@@ -17,7 +17,9 @@ export const metadata: Metadata = pageMetadata({
   path: "/contact",
 });
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  const { site } = await getSiteContent();
+
   return (
     <Container className="py-14 sm:py-20">
       <Reveal>
@@ -94,7 +96,7 @@ export default function ContactPage() {
             </div>
 
             <div className="mt-7 flex flex-wrap items-center gap-3">
-              <CopyEmail label="Copy email address" />
+              <CopyEmail email={site.email} label="Copy email address" />
               <SocialLinks links={site.socials} size="sm" />
             </div>
 
@@ -129,7 +131,7 @@ export default function ContactPage() {
                 <Mail className="size-4" strokeWidth={1.8} />
               </span>
             </div>
-            <ContactForm />
+            <ContactForm to={site.email} />
           </div>
         </Reveal>
       </div>

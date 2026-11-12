@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { cacheLife } from "next/cache";
 import { ArrowUpRight } from "lucide-react";
-import { site } from "@/content/site";
+import type { SiteContent } from "@/types/content";
 import { Container } from "@/components/ui/container";
 import { Reveal } from "@/components/ui/reveal";
 import { SocialLinks } from "@/components/ui/social-links";
@@ -14,7 +14,7 @@ async function getCopyrightYear() {
   return new Date().getFullYear();
 }
 
-export async function Footer() {
+export async function Footer({ site }: { site: SiteContent["site"] }) {
   const year = await getCopyrightYear();
 
   return (
@@ -45,7 +45,7 @@ export async function Footer() {
               Start a conversation
               <ArrowUpRight className="size-4" strokeWidth={2} />
             </a>
-            <CopyEmail className="h-12 px-5 text-sm" />
+            <CopyEmail email={site.email} className="h-12 px-5 text-sm" />
           </div>
         </Reveal>
 

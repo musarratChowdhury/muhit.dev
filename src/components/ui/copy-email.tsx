@@ -2,16 +2,17 @@
 
 import { Check, Copy } from "lucide-react";
 import { useState } from "react";
-import { site } from "@/content/site";
 import { cn } from "@/lib/utils";
 
 type CopyEmailProps = {
+  email: string;
   className?: string;
   label?: string;
   compact?: boolean;
 };
 
 export function CopyEmail({
+  email,
   className,
   label = "Copy email",
   compact = false,
@@ -20,11 +21,11 @@ export function CopyEmail({
 
   async function handleCopy() {
     try {
-      await navigator.clipboard.writeText(site.email);
+      await navigator.clipboard.writeText(email);
       setCopied(true);
       window.setTimeout(() => setCopied(false), 2000);
     } catch {
-      window.location.href = `mailto:${site.email}`;
+      window.location.href = `mailto:${email}`;
     }
   }
 

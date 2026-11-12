@@ -1,12 +1,12 @@
 import Link from "next/link";
 import { ArrowUpRight, FileText } from "lucide-react";
-import { experience } from "@/content/experience";
+import type { Experience } from "@/types/content";
 import { Section, SectionHeading } from "@/components/ui/section";
 import { Reveal } from "@/components/ui/reveal";
 import { TechPill } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 
-export function ExperienceSection() {
+export function ExperienceSection({ experience }: { experience: Experience[] }) {
   return (
     <Section id="experience">
       <SectionHeading

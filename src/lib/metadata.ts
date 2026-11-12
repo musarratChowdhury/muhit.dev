@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { site } from "@/content/site";
+import { site as staticSite } from "@/content/site";
 
 type PageMetadataOptions = {
   title: string | { absolute: string };
@@ -7,6 +7,9 @@ type PageMetadataOptions = {
   path: string;
   type?: "website" | "article";
   ogTitle?: string;
+  /** Overrides for the values that live in editable site content. */
+  siteName?: string;
+  baseUrl?: string;
 };
 
 /**
@@ -20,10 +23,14 @@ export function pageMetadata({
   path,
   type = "website",
   ogTitle,
+  siteName,
+  baseUrl,
 }: PageMetadataOptions): Metadata {
+  const shortName = siteName ?? staticSite.shortName;
+  const url = baseUrl ?? staticSite.url;
+
   const socialTitle =
-    ogTitle ??
-    (typeof title === "string" ? `${title} — ${site.shortName}` : title.absolute);
+    ogTitle ?? (typeof title === "string" ? `${title} — ${shortName}` : title.absolute);
 
   return {
     title,
@@ -34,8 +41,8 @@ export function pageMetadata({
     openGraph: {
       title: socialTitle,
       description,
-      url: new URL(path, site.url).toString(),
-      siteName: site.shortName,
+      url: new URL(path, url).toString(),
+      siteName: shortName,
       locale: "en_US",
       type,
       images: [

@@ -1,11 +1,13 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
-import { featuredProjects, projects } from "@/content/projects";
+import type { Project } from "@/types/content";
 import { Section, SectionHeading } from "@/components/ui/section";
 import { buttonVariants } from "@/components/ui/button";
 import { ProjectCard } from "@/components/projects/project-card";
 
-export function FeaturedProjects() {
+export function FeaturedProjects({ projects }: { projects: Project[] }) {
+  const featured = projects.filter((project) => project.featured);
+
   return (
     <Section id="work">
       <SectionHeading
@@ -29,7 +31,7 @@ export function FeaturedProjects() {
       />
 
       <div className="grid gap-5 md:grid-cols-2">
-        {featuredProjects.map((project, index) => (
+        {featured.map((project, index) => (
           <ProjectCard
             key={project.slug}
             project={project}

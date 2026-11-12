@@ -5,13 +5,13 @@ import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "motion/react";
 import { ArrowUpRight, Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
-import { site } from "@/content/site";
+import type { SiteContent } from "@/types/content";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 import { SocialLinks } from "@/components/ui/social-links";
 import { CopyEmail } from "@/components/ui/copy-email";
 
-export function Navbar() {
+export function Navbar({ site }: { site: SiteContent["site"] }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -143,7 +143,7 @@ export function Navbar() {
               </div>
 
               <div className="mt-auto flex flex-col gap-4 border-t border-border pt-6">
-                <CopyEmail className="w-fit" />
+                <CopyEmail email={site.email} className="w-fit" />
                 <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted">
                   {site.location} · {site.timezone}
                 </p>

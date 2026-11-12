@@ -10,14 +10,15 @@ import {
   ExternalLink,
 } from "lucide-react";
 import { GithubIcon } from "@/components/icons/brand-icons";
-import { getProject, projects } from "@/content/projects";
+import { findProject, getSiteContent } from "@/lib/content/store";
 import { pageMetadata } from "@/lib/metadata";
 import { Container } from "@/components/ui/container";
 import { Reveal } from "@/components/ui/reveal";
 import { Badge, TechPill } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
+  const { projects } = await getSiteContent();
   return projects.map((project) => ({ slug: project.slug }));
 }
 
@@ -25,7 +26,8 @@ export async function generateMetadata({
   params,
 }: PageProps<"/projects/[slug]">): Promise<Metadata> {
   const { slug } = await params;
-  const project = getProject(slug);
+  const content = await getSiteContent();
+  const project = findProject(content, slug);
 
   if (!project) return {};
 
@@ -35,6 +37,8 @@ export async function generateMetadata({
     path: `/projects/${project.slug}`,
     type: "article",
     ogTitle: `${project.title} — ${project.subtitle}`,
+    siteName: content.site.shortName,
+    baseUrl: content.site.url,
   });
 }
 
@@ -68,12 +72,14 @@ async function ProjectContent({
   params,
 }: Pick<PageProps<"/projects/[slug]">, "params">) {
   const { slug } = await params;
-  const project = getProject(slug);
+  const content = await getSiteContent();
+  const project = findProject(content, slug);
 
   if (!project) notFound();
 
+  const projects = content.projects;
   const index = projects.findIndex((item) => item.slug === project.slug);
-  const nextProject = projects[(index + 1) % projects.length];
+  const nextProject = projects[(index + 1) % projects.length] ?? project;
 
   return (
     <Container className="py-14 sm:py-20">

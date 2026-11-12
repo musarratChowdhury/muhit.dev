@@ -1,33 +1,38 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { projects, projectCategories } from "@/content/projects";
+import type { Project } from "@/types/content";
 import { cn } from "@/lib/utils";
 import { ProjectCard } from "@/components/projects/project-card";
 
-export function ProjectGrid() {
+export function ProjectGrid({ projects }: { projects: Project[] }) {
   const [active, setActive] = useState<string>("All");
 
+  const categories = useMemo(
+    () => ["All", ...new Set(projects.map((project) => project.category))],
+    [projects],
+  );
+
   const counts = useMemo(() => {
-    return projectCategories.reduce<Record<string, number>>((acc, category) => {
+    return categories.reduce<Record<string, number>>((acc, category) => {
       acc[category] =
         category === "All"
           ? projects.length
           : projects.filter((project) => project.category === category).length;
       return acc;
     }, {});
-  }, []);
+  }, [categories, projects]);
 
   const filtered = useMemo(() => {
     return active === "All"
       ? projects
       : projects.filter((project) => project.category === active);
-  }, [active]);
+  }, [active, projects]);
 
   return (
     <div>
       <div className="flex flex-wrap gap-2" role="group" aria-label="Filter projects">
-        {projectCategories.map((category) => {
+        {categories.map((category) => {
           const isActive = active === category;
           return (
             <button

@@ -1,4 +1,11 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+
+/* Dark styling is opt-in: either an explicit `.dark` ancestor, or any page
+   that renders the admin shell. The `:root:has()` half exists because Radix
+   portals (dialogs, selects, dropdowns) mount on <body>, outside `.admin-shell`,
+   so they must pick the same tokens up from the root element. */
+@custom-variant dark (&:is(.dark *, :root:has(.admin-shell) *));
 
 @theme inline {
   --color-background: var(--background);
@@ -11,6 +18,21 @@
   --color-accent: var(--accent);
   --color-accent-soft: var(--accent-soft);
   --color-accent-foreground: var(--accent-foreground);
+
+  /* shadcn/ui semantic tokens — only used inside the admin area. */
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
 
   --font-sans: var(--font-sora);
   --font-mono: var(--font-jetbrains);
@@ -32,6 +54,43 @@
   --accent: #00ff99;
   --accent-soft: rgba(0, 255, 153, 0.12);
   --accent-foreground: #04110b;
+
+  /* Brand accent, re-emitted on <html> from the stored theme so the admin can
+     follow the public site's colour without reading it twice. */
+  --brand-accent: var(--accent);
+  --brand-accent-ink: var(--accent-foreground);
+}
+
+/* ── Admin shell ───────────────────────────────────────────────────────────
+   shadcn/ui semantic tokens. Scoped to :root only while an admin page is on
+   screen, which keeps the public site's palette untouched and still lets
+   portalled overlays inherit the same values.
+
+   Note the deliberate re-definitions: the site uses `--accent` for the brand
+   mint, shadcn uses it for a subtle hover surface. Inside the admin the shadcn
+   meaning wins and the brand colour is reachable as `--primary`. */
+:root:has(.admin-shell) {
+  --radius: 0.75rem;
+
+  --background: #0b0b13;
+  --foreground: #f3f3f7;
+  --card: #12121d;
+  --card-foreground: #f3f3f7;
+  --popover: #171726;
+  --popover-foreground: #f3f3f7;
+  --primary: var(--brand-accent);
+  --primary-foreground: var(--brand-accent-ink);
+  --secondary: #1c1c2c;
+  --secondary-foreground: #f3f3f7;
+  --muted: #1c1c2c;
+  --muted-foreground: #9a9aab;
+  --accent: #26263c;
+  --accent-foreground: #f3f3f7;
+  --destructive: #ff5c72;
+  --destructive-foreground: #1b0509;
+  --border: rgba(255, 255, 255, 0.1);
+  --input: rgba(255, 255, 255, 0.14);
+  --ring: var(--brand-accent);
 }
 
 @layer base {

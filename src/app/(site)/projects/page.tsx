@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import { projects } from "@/content/projects";
 import { pageMetadata } from "@/lib/metadata";
+import { getSiteContent } from "@/lib/content/store";
 import { Container } from "@/components/ui/container";
 import { Reveal } from "@/components/ui/reveal";
 import { Badge } from "@/components/ui/badge";
@@ -13,15 +13,18 @@ export const metadata: Metadata = pageMetadata({
   path: "/projects",
 });
 
-export default function ProjectsPage() {
-  const years = projects.map((project) => Number(project.year));
-  const range = `${Math.min(...years)}—${Math.max(...years)}`;
+export default async function ProjectsPage() {
+  const { projects } = await getSiteContent();
+
+  const years = projects.map((project) => Number(project.year)).filter(Number.isFinite);
+  const range =
+    years.length > 0 ? `${Math.min(...years)}—${Math.max(...years)}` : "";
 
   return (
     <Container className="py-14 sm:py-20">
       <Reveal>
         <Badge>
-          {projects.length} projects · {range}
+          {projects.length} projects{range ? ` · ${range}` : ""}
         </Badge>
         <h1 className="mt-6 max-w-3xl text-balance text-4xl font-semibold tracking-tight sm:text-5xl lg:text-6xl">
           A broader look at what I&apos;ve{" "}
@@ -35,7 +38,7 @@ export default function ProjectsPage() {
       </Reveal>
 
       <div className="mt-10">
-        <ProjectGrid />
+        <ProjectGrid projects={projects} />
       </div>
     </Container>
   );

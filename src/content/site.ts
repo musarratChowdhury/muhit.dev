@@ -1,10 +1,12 @@
 import type { NavItem, SocialLink, Stat } from "@/types/content";
+import { BUNDLED_PORTRAIT } from "@/lib/site-assets";
 
 export const site = {
   name: "Md. Musarrat Hossain Chowdhury",
   shortName: "Musarrat Chowdhury",
   firstName: "Musarrat",
   lastName: "Chowdhury",
+  portrait: BUNDLED_PORTRAIT,
   initials: "MC",
   domain: "muhit.dev",
   role: "Software Engineer (.NET)",
@@ -23,6 +25,7 @@ export const site = {
   nav: [
     { label: "Work", href: "/#work" },
     { label: "Experience", href: "/#experience" },
+    { label: "Reviews", href: "/#reviews" },
     { label: "About", href: "/#about" },
     { label: "Contact", href: "/contact" },
   ] satisfies NavItem[],

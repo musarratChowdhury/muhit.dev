@@ -1,14 +1,14 @@
-import { site } from "@/content/site";
+import type { Stat } from "@/types/content";
 import { cn } from "@/lib/utils";
 import { Container } from "@/components/ui/container";
 import { Reveal } from "@/components/ui/reveal";
 
-export function Stats() {
+export function Stats({ stats }: { stats: Stat[] }) {
   return (
     <section className="relative border-y border-border">
       <Container>
         <div className="grid grid-cols-2 lg:grid-cols-4">
-          {site.stats.map((stat, index) => (
+          {stats.map((stat, index) => (
             <Reveal
               key={stat.label}
               delay={index * 0.06}
