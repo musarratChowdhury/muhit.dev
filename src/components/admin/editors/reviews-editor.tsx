@@ -57,7 +57,7 @@ export function ReviewsEditor({
     <div className="space-y-8">
       <EditorHeader
         title="Reviews"
-        description="Client quotes and the aggregate rating. Leave the placeholder quotes in place until you have real ones — they're clearly bracketed so nothing looks invented."
+        description="Client quotes and the aggregate rating. Only paste words a client actually wrote — leave the collection empty rather than inventing a quote."
         onSave={handleSave}
         dirty={editor.dirty}
       />

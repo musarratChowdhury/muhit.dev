@@ -3,23 +3,26 @@ import type { Review, ReviewSummary } from "@/types/content";
 /**
  * Client reviews.
  *
- * ⚠️ PLACEHOLDERS: every quote, name, and meta line below is template text from
- * the design hand-off. Replace each one with a real review you can point back to
- * (Fiverr order, Upwork contract, LinkedIn recommendation, or an email thread)
- * before deploying — only publish words a client actually wrote.
+ * Only publish words a client actually wrote. Both entries below are copied from
+ * the public Upwork review cards (5.0 stars each); Upwork does not show client
+ * names on those cards, so they are attributed to "Upwork client".
  *
- * - Set `featured: true` on the one review that gets the large card.
- * - Add `sourceUrl` to turn the "Verified on …" label into a link.
- * - Set `rating` (1–5) per review; it defaults to 5 in the UI.
+ * - `featured: true` marks the review that gets the large card.
+ * - `sourceUrl` turns the "Verified on …" label into a link. Both reviews point
+ *   at the public Upwork profile, which is where the originals live.
+ * - `rating` (1–5) is per review; it defaults to 5 in the UI.
  */
+
+/** Public Upwork profile — the canonical page for every review below. */
+const UPWORK_PROFILE_URL = "https://www.upwork.com/freelancers/~015b22771cc7402d4f";
 
 export const reviewSummary: ReviewSummary = {
   score: 5,
-  platform: "Fiverr",
-  // url: "https://www.fiverr.com/your-handle",
+  platform: "Upwork",
+  url: UPWORK_PROFILE_URL,
   criteria: [
     { label: "Communication", score: 5 },
-    { label: "Service as described", score: 5 },
+    { label: "Quality of work", score: 5 },
     { label: "Would recommend", score: 5 },
   ],
 };
@@ -27,67 +30,23 @@ export const reviewSummary: ReviewSummary = {
 export const reviews: Review[] = [
   {
     quote:
-      "[Paste your strongest client review here, word for word. Two or three sentences work best.]",
-    name: "[Client name]",
-    role: "[Client role]",
-    country: "[Country]",
-    projectType: "[Project type]",
+      "Muhit is an excellent developer! He created a custom book cover maker plugin for my site that is not only user-friendly but also packed with useful features.",
+    name: "Upwork client",
+    role: "Fabric.js plugin project",
+    projectType: "Fabric.js book cover maker · Oct–Dec 2024",
     rating: 5,
-    source: "Fiverr",
+    source: "Upwork",
+    sourceUrl: UPWORK_PROFILE_URL,
     featured: true,
   },
   {
-    quote: "[Client review 2, copied word for word.]",
-    name: "[Client name]",
-    role: "[Client role]",
-    country: "[Country]",
-    projectType: "[Project type]",
+    quote:
+      "Muhit has done an exceptional Job in doing my work in such a short time. He is extremely cooperative and Good in communication. i would love to work with him again for future tasks and highly recommend him",
+    name: "Upwork client",
+    role: "JavaScript game project",
+    projectType: "HTML game · Jul 2024",
     rating: 5,
-    source: "Fiverr",
-  },
-  {
-    quote: "[Client review 3, copied word for word.]",
-    name: "[Client name]",
-    role: "[Client role]",
-    country: "[Country]",
-    projectType: "[Project type]",
-    rating: 5,
-    source: "Fiverr",
-  },
-  {
-    quote: "[Client review 4, copied word for word.]",
-    name: "[Client name]",
-    role: "[Client role]",
-    country: "[Country]",
-    projectType: "[Project type]",
-    rating: 5,
-    source: "Fiverr",
-  },
-  {
-    quote: "[Client review 5, copied word for word.]",
-    name: "[Client name]",
-    role: "[Client role]",
-    country: "[Country]",
-    projectType: "[Project type]",
-    rating: 5,
-    source: "Fiverr",
-  },
-  {
-    quote: "[Client review 6, copied word for word.]",
-    name: "[Client name]",
-    role: "[Client role]",
-    country: "[Country]",
-    projectType: "[Project type]",
-    rating: 5,
-    source: "Fiverr",
-  },
-  {
-    quote: "[Client review 7, copied word for word.]",
-    name: "[Client name]",
-    role: "[Client role]",
-    country: "[Country]",
-    projectType: "[Project type]",
-    rating: 5,
-    source: "Fiverr",
+    source: "Upwork",
+    sourceUrl: UPWORK_PROFILE_URL,
   },
 ];

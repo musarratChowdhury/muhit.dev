@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { ArrowUpRight, Quote, Star, User } from "lucide-react";
-import type { Review, ReviewSummary } from "@/types/content";
+import type { Review, ReviewSource, ReviewSummary } from "@/types/content";
 import { Section, SectionHeading } from "@/components/ui/section";
 import { Reveal } from "@/components/ui/reveal";
 import { SpotlightCard } from "@/components/ui/spotlight-card";
 import { buttonVariants } from "@/components/ui/button";
+import { UpworkIcon } from "@/components/icons/brand-icons";
 
 function Stars({ rating = 5 }: { rating?: number }) {
   return (
@@ -33,11 +34,24 @@ function reviewMeta(review: Review) {
   return [review.country, review.projectType].filter(Boolean).join(" · ");
 }
 
+/** Marketplace mark for the platform a review came from, if we have one. */
+function SourceLogo({
+  source,
+  className,
+}: {
+  source: ReviewSource;
+  className?: string;
+}) {
+  if (source === "Upwork") return <UpworkIcon className={className} />;
+  return null;
+}
+
 function SourceLabel({ review }: { review: Review }) {
   if (!review.source) return null;
 
   const label = (
     <>
+      <SourceLogo source={review.source} className="size-3.5 shrink-0" />
       Verified on {review.source}
       {review.sourceUrl ? (
         <ArrowUpRight className="size-3.5" strokeWidth={1.8} />
@@ -81,7 +95,11 @@ function RatingSummary({
         <div>
           <Stars rating={Math.round(summary.score)} />
           <p className="mt-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-muted">
-            {count} reviews on {summary.platform}
+            {count} reviews on{" "}
+            <span className="inline-flex items-center gap-1 align-middle">
+              <SourceLogo source={summary.platform} className="size-3 shrink-0" />
+              {summary.platform}
+            </span>
           </p>
         </div>
       </div>

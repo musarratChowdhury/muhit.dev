@@ -14,6 +14,7 @@ import { useReducedMotion } from "motion/react";
 import type { Recommendation } from "@/types/content";
 import { isRemoteImage } from "@/lib/site-assets";
 import { buttonVariants } from "@/components/ui/button";
+import { LinkedinIcon } from "@/components/icons/brand-icons";
 import { cn } from "@/lib/utils";
 
 /** How long each recommendation stays on screen before the next one rotates in. */
@@ -102,11 +103,10 @@ function RecommendationCard({ recommendation }: { recommendation: Recommendation
           {recommendation.quote}
         </blockquote>
 
-        {recommendation.date ? (
-          <p className="mt-6 font-mono text-[10px] uppercase tracking-[0.14em] text-muted">
-            {recommendation.date}
-          </p>
-        ) : null}
+        <p className="mt-6 inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-muted">
+          <LinkedinIcon className="size-3 shrink-0" />
+          {["LinkedIn", recommendation.date].filter(Boolean).join(" · ")}
+        </p>
       </div>
     </article>
   );
