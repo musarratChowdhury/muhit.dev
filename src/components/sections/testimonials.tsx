@@ -5,7 +5,8 @@ import { Section, SectionHeading } from "@/components/ui/section";
 import { Reveal } from "@/components/ui/reveal";
 import { SpotlightCard } from "@/components/ui/spotlight-card";
 import { buttonVariants } from "@/components/ui/button";
-import { UpworkIcon } from "@/components/icons/brand-icons";
+import { FiverrIcon, UpworkIcon } from "@/components/icons/brand-icons";
+import { CountryFlag } from "@/components/icons/flags";
 
 function Stars({ rating = 5 }: { rating?: number }) {
   return (
@@ -34,15 +35,28 @@ function reviewMeta(review: Review) {
   return [review.country, review.projectType].filter(Boolean).join(" · ");
 }
 
-/** Marketplace mark for the platform a review came from, if we have one. */
-function SourceLogo({
-  source,
-  className,
-}: {
-  source: ReviewSource;
-  className?: string;
-}) {
-  if (source === "Upwork") return <UpworkIcon className={className} />;
+/** Country + project line under a reviewer's name, with the country's flag. */
+function ReviewMeta({ review }: { review: Review }) {
+  const meta = reviewMeta(review);
+  if (!meta) return null;
+
+  return (
+    <p className="mt-0.5 flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-muted">
+      <CountryFlag country={review.country} />
+      {meta}
+    </p>
+  );
+}
+
+/**
+ * Marketplace mark for the platform a review came from, if we have one.
+ *
+ * Fiverr's brand mark is a lowercase wordmark, so it is sized by height and
+ * left to take its natural width; Upwork's is a square glyph.
+ */
+function SourceLogo({ source }: { source: ReviewSource }) {
+  if (source === "Upwork") return <UpworkIcon className="size-3.5 shrink-0" />;
+  if (source === "Fiverr") return <FiverrIcon className="h-2.5 w-auto shrink-0" />;
   return null;
 }
 
@@ -51,7 +65,7 @@ function SourceLabel({ review }: { review: Review }) {
 
   const label = (
     <>
-      <SourceLogo source={review.source} className="size-3.5 shrink-0" />
+      <SourceLogo source={review.source} />
       Verified on {review.source}
       {review.sourceUrl ? (
         <ArrowUpRight className="size-3.5" strokeWidth={1.8} />
@@ -79,13 +93,24 @@ function SourceLabel({ review }: { review: Review }) {
   );
 }
 
+function sourceCounts(reviews: Review[]): [ReviewSource, number][] {
+  const counts = new Map<ReviewSource, number>();
+  for (const review of reviews) {
+    if (!review.source) continue;
+    counts.set(review.source, (counts.get(review.source) ?? 0) + 1);
+  }
+  return [...counts.entries()].sort((a, b) => b[1] - a[1]);
+}
+
 function RatingSummary({
   summary,
-  count,
+  reviews,
 }: {
   summary: ReviewSummary;
-  count: number;
+  reviews: Review[];
 }) {
+  const counts = sourceCounts(reviews);
+
   return (
     <div className="w-full rounded-2xl border border-border bg-surface/70 p-5 sm:w-[21rem]">
       <div className="flex items-center gap-4">
@@ -94,13 +119,16 @@ function RatingSummary({
         </span>
         <div>
           <Stars rating={Math.round(summary.score)} />
-          <p className="mt-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-muted">
-            {count} reviews on{" "}
-            <span className="inline-flex items-center gap-1 align-middle">
-              <SourceLogo source={summary.platform} className="size-3 shrink-0" />
-              {summary.platform}
-            </span>
-          </p>
+          <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[10px] uppercase tracking-[0.14em] text-muted">
+            <span>{reviews.length} reviews</span>
+            {counts.map(([source, count]) => (
+              <span key={source} className="inline-flex items-center gap-1">
+                <SourceLogo source={source} />
+                <span className="sr-only">{source}: </span>
+                {count}
+              </span>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -144,13 +172,16 @@ export function Testimonials({
             <span className="text-accent">shipped</span> for.
           </>
         }
-        description="Real reviews, copied word for word. Every card links back to the original."
-        action={<RatingSummary summary={summary} count={reviews.length} />}
+        description="Real reviews, copied word for word, from Upwork and Fiverr."
+        action={<RatingSummary summary={summary} reviews={reviews} />}
       />
 
       <div className="grid gap-5 lg:grid-cols-[1.65fr_1fr]">
         <Reveal className="h-full">
-          <SpotlightCard className="flex h-full flex-col rounded-3xl border border-border bg-surface/70 p-6 sm:p-9">
+          <SpotlightCard
+            className="flex h-full flex-col rounded-3xl border border-border bg-surface/70 p-6 sm:p-9"
+            contentClassName="flex flex-1 flex-col"
+          >
             <Quote
               className="size-8 fill-accent text-accent"
               strokeWidth={1.5}
@@ -169,9 +200,7 @@ export function Testimonials({
                   <p className="text-sm font-medium text-foreground">
                     {featured.name}
                   </p>
-                  <p className="mt-0.5 font-mono text-[10px] uppercase tracking-[0.14em] text-muted">
-                    {reviewMeta(featured)}
-                  </p>
+                  <ReviewMeta review={featured} />
                 </div>
               </div>
               <SourceLabel review={featured} />
@@ -220,7 +249,10 @@ export function Testimonials({
             delay={index * 0.05}
             className="h-full"
           >
-            <SpotlightCard className="flex h-full flex-col rounded-3xl border border-border bg-surface/70 p-6">
+            <SpotlightCard
+              className="flex h-full flex-col rounded-3xl border border-border bg-surface/70 p-6"
+              contentClassName="flex flex-1 flex-col"
+            >
               <Stars rating={review.rating} />
               <blockquote className="mt-4 flex-1 text-sm leading-relaxed text-muted-strong">
                 {review.quote}
@@ -230,9 +262,7 @@ export function Testimonials({
                 <p className="text-sm font-medium text-foreground">
                   {review.name}
                 </p>
-                <p className="mt-0.5 font-mono text-[10px] uppercase tracking-[0.14em] text-muted">
-                  {reviewMeta(review)}
-                </p>
+                <ReviewMeta review={review} />
                 <div className="mt-3">
                   <SourceLabel review={review} />
                 </div>

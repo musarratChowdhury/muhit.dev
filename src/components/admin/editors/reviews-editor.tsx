@@ -169,6 +169,7 @@ export function ReviewsEditor({
                   label="Country"
                   value={review.country ?? ""}
                   onChange={(value) => update({ country: value })}
+                  hint="Shown as a flag, e.g. United Kingdom"
                 />
                 <TextField
                   label="Project type"

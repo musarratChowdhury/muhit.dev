@@ -6,12 +6,19 @@ import { cn } from "@/lib/utils";
 type SpotlightCardProps = {
   children: ReactNode;
   className?: string;
+  /**
+   * Classes for the inner content wrapper. Use it when the card needs to lay
+   * its children out itself (e.g. `"flex flex-1 flex-col"` so a `flex-1` child
+   * pushes the footer to the bottom of a stretched grid cell).
+   */
+  contentClassName?: string;
   spotColor?: string;
 };
 
 export function SpotlightCard({
   children,
   className,
+  contentClassName,
   spotColor = "rgba(0, 255, 153, 0.08)",
 }: SpotlightCardProps) {
   const ref = useRef<HTMLDivElement>(null);
@@ -38,7 +45,7 @@ export function SpotlightCard({
           background: `radial-gradient(520px circle at var(--spot-x, 50%) var(--spot-y, 50%), ${spotColor}, transparent 55%)`,
         }}
       />
-      <div className="relative z-10">{children}</div>
+      <div className={cn("relative z-10", contentClassName)}>{children}</div>
     </div>
   );
 }
