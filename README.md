@@ -51,9 +51,13 @@ exactly as before.
 colours, contacts, socials, stats, navigation, experience, projects, reviews,
 recommendations, education and skills.
 
-- **Sign-in** uses Firebase Auth (email + password). The account must be in the
-  `ADMIN_EMAILS` allow-list; any other account in the shared Firebase project is
-  rejected.
+- **Sign-in** is Google-only, through Firebase Auth. The Google account must be
+  in the `ADMIN_EMAILS` allow-list; any other account in the shared Firebase
+  project is rejected. The popup falls back to a full-page redirect where popups
+  can't run (Safari's cookie partitioning, in-app browsers), and the redirect
+  result is finished on the next load.
+- Authorization is by **email, not uid**, so the admin's Firebase user can be
+  recreated (or the sign-in provider changed) without losing access.
 - The Firebase ID token is exchanged server-side for an httpOnly session cookie
   (`/api/auth/session`), so no token is ever kept in `localStorage`.
 - All writes go through Server Actions that re-validate the payload
@@ -205,7 +209,8 @@ Git repository connected today, and connecting it would deploy every push twice.
 
 Two notes for a fresh project:
 
-- Add the production domain to **Firebase Auth → Settings → Authorized domains**, or
-  sign-in fails with `auth/unauthorized-domain`.
+- Enable **Firebase Auth → Sign-in method → Google** and add the production
+  domain to **Firebase Auth → Settings → Authorized domains**, or sign-in fails
+  with `auth/unauthorized-domain`.
 - Set `FIREBASE_SERVICE_ACCOUNT` (inline JSON) rather than the path variable.
 
